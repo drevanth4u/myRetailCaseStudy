@@ -1,23 +1,34 @@
 package com.target.retail.controller;
 
+import java.net.URI;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.apache.http.auth.AuthScope;
+import org.apache.http.auth.UsernamePasswordCredentials;
+import org.apache.http.client.CredentialsProvider;
+import org.apache.http.client.HttpClient;
+import org.apache.http.impl.client.BasicCredentialsProvider;
+import org.apache.http.impl.client.HttpClientBuilder;
+import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Mockito;
-import org.skyscreamer.jsonassert.JSONAssert;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
+import org.springframework.http.client.HttpComponentsClientHttpRequestFactory;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.RequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
+import org.springframework.web.client.RestTemplate;
 
 import com.target.retail.exception.ProductNotFoundException;
 import com.target.retail.model.Product;
@@ -30,25 +41,69 @@ import com.target.retail.service.ProductService;
 @WebMvcTest(value = ProductController.class)
 @RunWith(SpringRunner.class)
 public class ProductControllerTest {
-	
+
 	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 
+	@Value("${server.port}")
+	private int serverPort;
+	
 	@Autowired
 	MockMvc mockMvc;
 
 	@MockBean
 	ProductService productServiceMock;
-	
-	@org.junit.Before
+
+	RestTemplate restTemplate;
+
+	// Timeout value in milliseconds
+	int timeout = 10_000;
+
+	@Before
 	public void setUp() {
+		restTemplate = new RestTemplate(getClientHttpRequestFactory());
 	}
-	
+
+	private HttpComponentsClientHttpRequestFactory getClientHttpRequestFactory() {
+		HttpComponentsClientHttpRequestFactory clientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory();
+
+		clientHttpRequestFactory.setHttpClient(httpClient());
+
+		return clientHttpRequestFactory;
+	}
+
+	private HttpClient httpClient() {
+		CredentialsProvider credentialsProvider = new BasicCredentialsProvider();
+
+		credentialsProvider.setCredentials(AuthScope.ANY, new UsernamePasswordCredentials("user", "password"));
+
+		HttpClient client = HttpClientBuilder.create().setDefaultCredentialsProvider(credentialsProvider).build();
+		return client;
+	}
+
+
 	/**
 	 * To test getProductInfo end point
-	 * @throws Exception 
+	 * 
+	 * @throws Exception
 	 */
 	@Test
-	public void getProductInfoTest() throws Exception{
+	public void testGetProductIdEndPoint() throws Exception {
+		final String baseUrl = "http://localhost:" + serverPort + "/products/13264003";
+		URI uri = new URI(baseUrl);
+
+		ResponseEntity<String> result = restTemplate.getForEntity(uri, String.class);
+
+		// Verify request succeed
+		Assert.assertEquals(200, result.getStatusCodeValue());
+	}
+
+	/**
+	 * To test getProductInfo end point
+	 * 
+	 * @throws Exception
+	 */
+	@Test
+	public void getProductInfoTest() throws Exception {
 		// service data from mock
 		Map<String, String> currency = new HashMap<>();
 		currency.put("value", "40");
@@ -57,20 +112,21 @@ public class ProductControllerTest {
 
 		Mockito.when(productServiceMock.getProductById(Mockito.anyString())).thenReturn(mockProduct);
 
-		String url = "/products/13264003";
-		RequestBuilder requestBuilder = MockMvcRequestBuilders.get(url).accept(MediaType.APPLICATION_JSON_VALUE);
+		final String baseUrl = "http://localhost:" + serverPort + "/products/13264003";
+		URI uri = new URI(baseUrl);
 
-		// Actual Result
-		MvcResult result = mockMvc.perform(requestBuilder).andReturn();
+		ResponseEntity<String> result = restTemplate.getForEntity(uri, String.class);
+
 		// Expected Result
-		String expectedProductJson = "{\"productId\": \"13264003\",\"current_price\": {\"value\": \"40\",\"currency_code\": \"USD\"},\"title\": \"Jif Natural Creamy Peanut Butter - 40oz\"}";
+		String expectedProductJson = "{\"productId\":\"13264003\",\"title\":\"Jif Natural Creamy Peanut Butter - 40oz\",\"current_price\":{\"value\":\"40\",\"currency_code\":\"USD\"}}";
+		// Verify request succeed
+		Assert.assertEquals(200, result.getStatusCodeValue());
 
-		JSONAssert.assertEquals(expectedProductJson, result.getResponse().getContentAsString(), true);
+		Assert.assertEquals(expectedProductJson, result.getBody());
 	}
-	
+
 	/**
-	 * @throws Exception 
-	 * To verify ProductNotFoundException
+	 * @throws Exception To verify ProductNotFoundException
 	 */
 	@Test
 	public void getProductInfoTestProductNotFound() throws Exception {
@@ -84,6 +140,5 @@ public class ProductControllerTest {
 			logger.debug("Product not found Exception test sucess.");
 		}
 	}
-	
-	
+
 }
