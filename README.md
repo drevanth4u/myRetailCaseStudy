@@ -92,17 +92,17 @@ http://localhost:8085/swagger-ui.html
 ![Sawgger_UI](https://user-images.githubusercontent.com/46389696/118859456-de128a80-b89f-11eb-8385-0060a55422a0.png)
 
 
-GET Product Info: With valid product id and credentials (http://localhost:8080/products/ 13264003)
+GET Product Info: With valid product id and credentials (http://localhost:8080/products/13264003)
 
 ![Get_Request_1](https://user-images.githubusercontent.com/46389696/118859565-fda9b300-b89f-11eb-8a26-c606be9f2382.png)
 
 
-GET Product Info: With wrong product id and valid credentials(http://localhost:8080/products/ 13264003)
+GET Product Info: With wrong product id and valid credentials(http://localhost:8080/products/1326403)
 
 ![Get_Request_2](https://user-images.githubusercontent.com/46389696/118859626-1023ec80-b8a0-11eb-99cd-41b18ec3cade.png)
 
 
-GET Product Info: (Fallback) With valid product id and credentials and External API is down (http://localhost:8080/products/ 13264003)
+GET Product Info: (Fallback) With valid product id and credentials and External API is down (http://localhost:8080/products/13264003)
 
 ![Get_Request_3](https://user-images.githubusercontent.com/46389696/118859829-49f4f300-b8a0-11eb-817d-133dca76474c.png)
 
