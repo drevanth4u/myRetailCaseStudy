@@ -86,7 +86,8 @@ The end point of this application is fully secure.
 
 2. user/password   --- To update product price information.
 
-******Swagger2 documentation path******
+### Swagger2 documentation path
+
 http://localhost:8085/swagger-ui.html
 
 ![Sawgger_UI](https://user-images.githubusercontent.com/46389696/118859456-de128a80-b89f-11eb-8385-0060a55422a0.png)
@@ -97,7 +98,7 @@ GET Product Info: With valid product id and credentials (http://localhost:8080/p
 ![Get_Request_1](https://user-images.githubusercontent.com/46389696/118859565-fda9b300-b89f-11eb-8a26-c606be9f2382.png)
 
 
-GET Product Info: With wrong product id and valid credentials(http://localhost:8080/products/1326403)
+GET Product Info: With wrong product id and valid credentials(http://localhost:8080/products/123)
 
 ![Get_Request_2](https://user-images.githubusercontent.com/46389696/118859626-1023ec80-b8a0-11eb-99cd-41b18ec3cade.png)
 
@@ -115,7 +116,6 @@ PUT: Update Product price with valid credentials (http://localhost:8085/products
 PUT: Update Product price with wrong product id and valid credentials (http://localhost:8085/products/1360428)
 
 ![Put_Request_2](https://user-images.githubusercontent.com/46389696/118860059-8cb6cb00-b8a0-11eb-9735-77ac469f616d.png)
-
 
 
 PUT: Update Product price with missing product id, price, and valid credentials (http://localhost:8085/products/1360428)
