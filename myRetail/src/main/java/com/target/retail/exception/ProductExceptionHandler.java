@@ -6,8 +6,6 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 
-import com.target.retail.error.ErrorResponse;
-
 /**
  * 
  * @author Revanth
@@ -24,11 +22,11 @@ public class ProductExceptionHandler {
 	 * @return ErrorResponse
 	 */
 	@ExceptionHandler(ProductNotFoundException.class)
-	public final ResponseEntity<ErrorResponse> handleProductNotFoundException(ProductNotFoundException ex,
+	public final ResponseEntity<CustomResponse> handleProductNotFoundException(ProductNotFoundException ex,
 			WebRequest request) {
 
-		ErrorResponse error = new ErrorResponse(4001, ex.msg);
-		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+		CustomResponse response = new CustomResponse(4001, ex.msg);
+		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 	}
 
 	/**
@@ -39,11 +37,11 @@ public class ProductExceptionHandler {
 	 * @return ErrorResponse
 	 */
 	@ExceptionHandler(ProductMisMatchException.class)
-	public final ResponseEntity<ErrorResponse> handleProductMisMatchException(ProductMisMatchException ex,
+	public final ResponseEntity<CustomResponse> handleProductMisMatchException(ProductMisMatchException ex,
 			WebRequest request) {
 
-		ErrorResponse error = new ErrorResponse(4002, ex.msg);
-		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+		CustomResponse response = new CustomResponse(4002, ex.msg);
+		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 	}
 	
 	/**
@@ -51,14 +49,14 @@ public class ProductExceptionHandler {
 	 * 
 	 * @param ex
 	 * @param request
-	 * @return ErrorResponse
+	 * @return CustomResponse
 	 */
 	@ExceptionHandler(ProductInfoMissingException.class)
-	public final ResponseEntity<ErrorResponse> handleProductInfoMissingException(ProductInfoMissingException ex,
+	public final ResponseEntity<CustomResponse> handleProductInfoMissingException(ProductInfoMissingException ex,
 			WebRequest request) {
 
-		ErrorResponse error = new ErrorResponse(4003, ex.msg);
-		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+		CustomResponse response = new CustomResponse(4003, ex.msg);
+		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 	}
 
 	/**
@@ -69,10 +67,10 @@ public class ProductExceptionHandler {
 	 * @return ErrorResponse
 	 */
 	@ExceptionHandler(Exception.class)
-	public final ResponseEntity<ErrorResponse> handleException(Exception ex, WebRequest request) {
+	public final ResponseEntity<CustomResponse> handleException(Exception ex, WebRequest request) {
 
-		ErrorResponse error = new ErrorResponse(4004, ex.getMessage());
-		return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+		CustomResponse response = new CustomResponse(4004, ex.getMessage());
+		return new ResponseEntity<>(response, HttpStatus.NOT_FOUND);
 	}
 
 }
