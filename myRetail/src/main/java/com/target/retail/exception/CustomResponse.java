@@ -5,24 +5,24 @@ package com.target.retail.exception;
  *
  */
 public class CustomResponse {
-	private int value;
+	private int statusCode;
 	private String message;
 
 	public CustomResponse() {
 
 	}
 
-	public CustomResponse(int value, String message) {
-		this.value = value;
+	public CustomResponse(int statusCode, String message) {
+		this.statusCode = statusCode;
 		this.message = message;
 	}
 
-	public int getValue() {
-		return value;
+	public int getStatusCode() {
+		return statusCode;
 	}
 
-	public void setValue(int value) {
-		this.value = value;
+	public void setStatusCode(int statusCode) {
+		this.statusCode = statusCode;
 	}
 
 	public String getMessage() {
